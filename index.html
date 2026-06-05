@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS Arena - Tournament App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f7f9fc; padding-bottom: 100px; }
+        header { background-color: #fff; padding: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
+        .wallet-badge { background-color: #ede7f6; color: #673ab7; padding: 6px 14px; border-radius: 20px; font-weight: bold; }
+        .container { max-width: 500px; margin: 0 auto; padding: 15px; }
+        .deposit-card { background-color: #512da8; color: #fff; border-radius: 16px; padding: 18px; margin-bottom: 25px; }
+        .app-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-confirm { width: 100%; background-color: #673ab7; color: #fff; border: none; padding: 12px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        .room-details-box { display: none; background: #fff3cd; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; border: 1px dashed #ffc107; }
+        .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .toast-error { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); background-color: #212121; color: #fff; padding: 14px 20px; border-radius: 25px; display: none; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">RS Arena</div>
+        <div class="wallet-badge">💰 Wallet: ৳<span id="userBalance">500</span></div>
+    </header>
+
+    <div class="container">
+        <div class="deposit-card">
+            <h3>📥 টাকা অ্যাড করুন</h3>
+            <p style="font-size: 14px; margin: 10px 0;">বিকাশ/নগদ নম্বর: <strong>01851634841</strong></p>
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">উপরের নম্বরে টাকা পেমেন্ট করে নিচের তথ্যগুলো পূরণ করুন:</p>
+            
+            <input type="number" class="input-field" id="amt" placeholder="কত টাকা পেমেন্ট করেছেন?">
+            <input type="text" class="input-field" id="trx" placeholder="Transaction ID (ট্রানজেকশন আইডি)">
+            
+            <button class="btn-confirm" style="background:#ffc107; color:#000;" onclick="requestDeposit()">পেমেন্ট কনফার্ম করুন</button>
+        </div>
+
+        <div id="matchList"></div>
+    </div>
+
+    <div class="toast-error" id="toastMsg">পর্যাপ্ত ব্যালেন্স নেই! আগে টাকা অ্যাড করুন।</div>
+
+    <script>
+        let balance = 500;
+        let container = document.getElementById('matchList');
+
+        // ১০০টি ম্যাচ তৈরির লুপ
+        for (let i = 1; i <= 100; i++) {
+            let fee = (i % 3 === 0) ? 50 : 20; 
+            container.innerHTML += `
+            <div class="app-card">
+                <b>Tournament Match #${i}</b><br> এন্ট্রি ফি: ${fee} TK
+                <div id="joinArea_m${i}">
+                    <input type="text" class="input-field" id="name_m${i}" placeholder="গেমের নাম">
+                    <input type="text" class="input-field" id="phone_m${i}" placeholder="মোবাইল নম্বর">
+                    <button class="btn-confirm" onclick="joinMatch('m${i}', ${fee})">জয়েন করুন</button>
+                </div>
+                <div class="room-details-box" id="room_m${i}">
+                    🔑 রুম আইডি: 9988${i} | পাসওয়ার্ড: 1234
+                </div>
+            </div>`;
+        }
+
+        function requestDeposit() {
+            let amt = document.getElementById('amt').value;
+            let trx = document.getElementById('trx').value;
+            
+            if(amt && trx) {
+                alert("ধন্যবাদ! আপনার পেমেন্ট রিকোয়েস্টটি সফলভাবে জমা হয়েছে।\n\nপরিমাণ: " + amt + " টাকা\nTrxID: " + trx + "\n\nঅ্যাডমিন যাচাই করার পর আপনার ওয়ালেটে টাকা যোগ হবে।");
+                document.getElementById('amt').value = "";
+                document.getElementById('trx').value = "";
+            } else {
+                alert("দয়া করে টাকার পরিমাণ এবং ট্রানজেকশন আইডি উভয়ই পূরণ করুন!");
+            }
+        }
+
+        function joinMatch(id, fee) {
+            if(balance >= fee) {
+                balance -= fee;
+                document.getElementById('userBalance').innerText = balance;
+                document.getElementById('joinArea_'+id).style.display = 'none';
+                document.getElementById('room_'+id).style.display = 'block';
+                alert("সফলভাবে জয়েন করেছেন!");
+            } else {
+                let toast = document.getElementById('toastMsg');
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
