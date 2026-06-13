@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X FIRE BD - Official Fastest Topup</title>
+    <style>
+        /* গ্লোবাল এবং থিম কালার */
+        :root {
+            --primary-color: #ff4500;
+            --secondary-color: #0f3460;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --bkash-color: #e2136e;
+            --nagad-color: #f6921e;
+            --rocket-color: #8c3494;
+            --success-color: #2ecc71;
+            --purple-theme: #5c24b3;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; 
+            padding-bottom: 100px; 
+            color: #333; 
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* প্রিমিয়াম হেডার */
+        .header { 
+            background: var(--card-bg); 
+            padding: 12px 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+        .logo-area { 
+            font-weight: 900; 
+            font-size: 24px; 
+            color: var(--primary-color); 
+            cursor: pointer; 
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logo-area span { color: var(--secondary-color); }
+        .header-right { display: flex; align-items: center; gap: 10px; }
+        .balance-box { 
+            background: var(--purple-theme); 
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+        }
+        .user-avatar { 
+            width: 38px; 
+            height: 38px; 
+            background: #94a3b8; 
+            color: white; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            font-size: 15px; 
+            cursor: pointer; 
+        }
+
+        /* পেজ কন্ট্রোল */
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* কমন কার্ড লেআউট */
+        .card { background: var(--card-bg); margin: 12px; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .step-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; margin-bottom: 15px; color: #000; }
+        .step-num { background: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+
+        /* ================= SCREEN 1: HOME PAGE ================= */
+        /* টপ ব্যানার ৩ কলাম গ্রিড */
+        .top-offers-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            padding: 15px 12px 5px 12px; 
+        }
+        .top-offer-card { 
+            background: var(--card-bg); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            border: 1px solid #e2e8f0; 
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-offer-card img { 
+            width: 100%; 
+            aspect-ratio: 1; 
+            object-fit: cover; 
+        }
+        .top-offer-footer { 
+            font-size: 11px; 
+            font-weight: 800; 
+            text-align: center; 
+            padding: 8px 2px; 
+            color: #0f3460;
+            background: #fff;
+            border-top: 1px solid #f1f5f9;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+        }
+
+        /* সেকশন টাইটেল */
+        .section-header-title { 
+            text-align: center; 
+            color: #0f3460; 
+            font-size: 20px; 
+            font-weight: 900; 
+            margin: 25px 0 15px 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        
+        /* সার্ভিস গ্রিড (২টি কলাম যেমন স্ক্রিনশটে আছে) */
+        .services-product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            padding: 0 12px 20px 12px; 
+        }
+        .service-item-card { 
+            background: var(--card-bg); 
+            border-radius: 14px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); 
+            border: 1px solid #e2e8f0; 
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .service-item-card img { 
+            width: 100%; 
+            aspect-ratio: 1.1; 
+            object-fit: cover; 
+        }
+        .service-item-footer { 
+            font-size: 13px; 
+            font-weight: 800; 
+            text-align: center; 
+            padding: 10px 4px; 
+            color: #1e293b; 
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+
+        /* ================= SCREEN 2: DETAILS PAGE ================= */
+        .btn-back { background: none; border: none; font-size: 15px; font-weight: bold; color: var(--secondary-color); cursor: pointer; padding: 12px 15px 0 15px; display: flex; align-items: center; gap: 5px; }
+        .banner-card { background: var(--card-bg); margin: 12px; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 15px; border: 1px solid #e2e8f0; }
+        .banner-img { width: 65px; height: 65px; border-radius: 10px; background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; text-align: center; }
+        .banner-info h2 { margin: 0; font-size: 16px; color: #222; }
+        .banner-info p { margin: 4px 0 0 0; font-size: 12px; color: #888; }
+
+        .pack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .pack-btn { border: 1px solid #ddd; padding: 12px 10px; border-radius: 8px; cursor: pointer; background: #fff; display: flex; flex-direction: column; justify-content: space-between; min-height: 65px; position: relative; }
+        .pack-btn.selected { border: 2px solid var(--primary-color); background: #fff8f5; }
+        .pack-name { font-size: 12px; font-weight: 700; color: #444; line-height: 1.3; }
+        .pack-price { font-size: 13px; font-weight: 800; color: var(--primary-color); text-align: right; margin-top: 5px; width: 100%; }
+        
+        .stock-out-badge { position: absolute; bottom: 5px; left: 10px; background: #e74c3c; color: white; font-size: 9px; padding: 1px 5px; border-radius: 4px; font-weight: bold; }
+
+        .input-label { font-size: 13px; font-weight: 700; color: var(--secondary-color); margin-bottom: 6px; display: block; }
+        .input-container { display: flex; gap: 8px; margin-bottom: 12px; }
+        input[type="text"], input[type="number"] { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: var(--primary-color); }
+        .btn-paste { background: var(--primary-color); color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; }
+        .btn-check { width: 100%; padding: 14px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
+
+        /* গেটওয়ে মেথড */
+        .gateway-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
+        .gateway-card { border: 1px solid #ddd; border-radius: 10px; padding: 12px 8px; text-align: center; cursor: pointer; background: #fff; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: bold; color: #555; }
+        .gateway-card.bkash.selected { border: 2px solid var(--bkash-color); background: #fdf0f6; color: var(--bkash-color); }
+        .gateway-card.nagad.selected { border: 2px solid var(--nagad-color); background: #fffdf0; color: var(--nagad-color); }
+        .gateway-card.rocket.selected { border: 2px solid var(--rocket-color); background: #faf0fd; color: var(--rocket-color); }
+
+        .payment-details-box { background: #fdfdfd; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-top: 15px; display: none; }
+        .payment-instruction { font-size: 12px; color: #555; margin-bottom: 10px; line-height: 1.4; }
+        .copy-num-btn { background: #e2e8f0; border: none; padding: 3px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-left: 5px; color: #333; }
+        .btn-order-submit { width: 100%; padding: 15px; background: var(--secondary-color); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
+
+        /* ================= SCREEN 3: TOURNAMENT MATCHES ================= */
+        .match-card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; margin: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .match-header { background: #fef9e7; color: #7d6608; padding: 10px 12px; font-size: 12px; font-weight: bold; display: flex; justify-content: space-between; border-bottom: 1px solid #fadbd8; }
+        .match-body { padding: 15px; }
+        .match-title { font-size: 15px; font-weight: 800; color: #1e293b; margin-bottom: 12px; }
+        .match-details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; }
+        .detail-item { font-size: 11px; color: #64748b; font-weight: 600; }
+        .detail-item div { font-size: 14px; font-weight: bold; color: #0f172a; margin-top: 2px; }
+        .seat-info-container { margin-bottom: 12px; }
+        .seat-text-flex { display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 5px; }
+        .progress-bar-bg { width: 100%; height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #ff9900, var(--primary-color)); border-radius: 10px; }
+        .match-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 12px; }
+        .room-info-box { background: #e0f2fe; color: #0369a1; font-size: 11px; padding: 6px 10px; border-radius: 6px; font-weight: bold; flex: 1; margin-right: 10px; }
+        .btn-join-match { background: var(--success-color); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; white-space: nowrap; }
+
+        /* ================= SCREEN 4: ADD MONEY PAGE ================= */
+        .add-money-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #111; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+
+        /* ================= SCREEN 5: SIDEBAR PROFILE MENU ================= */
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; display: none; }
+        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #fff; z-index: 101; box-shadow: -2px 0 10px rgba(0,0,0,0.1); transition: 0.3s ease; padding: 20px; box-sizing: border-box; }
+        .sidebar.open { right: 0; }
+        .profile-section { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+        .profile-avatar { width: 60px; height: 60px; background: #607d8b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 0 auto 10px auto; }
+        .profile-name { font-weight: bold; font-size: 16px; color: #111; margin: 0; }
+        .profile-email { font-size: 12px; color: #777; margin: 4px 0 12px 0; }
+        .menu-list { list-style: none; padding: 0; margin: 0; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 8px; color: #333; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; }
+        .menu-item:hover { background: #f5f5f5; }
+
+        /* ফিক্সড বটম নেভিগেশন বার */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #e2e8f0; box-shadow: 0 -3px 12px rgba(0,0,0,0.05); z-index: 99; }
+        .nav-item { text-align: center; font-size: 11px; color: #64748b; font-weight: 600; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--purple-theme); }
+        .nav-icon { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-area" onclick="showPage('homePage')">X FIRE <span>BD</span></div>
+        <div class="header-right">
+            <div class="balance-box" id="userWalletBalance">👛 ৳ ০</div>
+            <div class="user-avatar" onclick="toggleSidebar(true)">Md</div>
+        </div>
+    </div>
+
+    <div id="homePage" class="page active">
+        
+        <div class="top-offers-grid">
+            <div class="top-offer-card" onclick="openProduct('PREMIUM USER OFFER', 'premium_user')">
+                <img src="https://i.ibb.co/VWVgM4G/premium-user.png" alt="Premium User" onerror="this.src='https://via.placeholder.com/150/5c24b3/ffffff?text=PREMIUM'">
+                <div class="top-offer-footer">PREMIUM USER</div>
+            </div>
+            <div class="top-offer-card" onclick="openProduct('120 TK WEEKLY', 'weekly_120')">
+                <img src="https://i.ibb.co/7C9mYm8/120-weekly.png" alt="120 Tk Weekly" onerror="this.src='https://via.placeholder.com/150/ff4500/ffffff?text=120+TK'">
+                <div class="top-offer-footer">120 TK WEEKLY</div>
+            </div>
+            <div class="top-offer-card" onclick="openProduct('FRIDAY OFFER ⚡', 'friday')">
+                <img src="https://i.ibb.co/6wX6mrc/friday-offer.png" alt="Friday Offer" onerror="this.src='https://via.placeholder.com/150/e67e22/ffffff?text=FRIDAY'">
+                <div class="top-offer-footer">FRIDAY OFFER</div>
+            </div>
+        </div>
+
+        <div class="section-header-title">FREE FIRE TOPUP</div>
+
+        <div class="services-product-grid">
+            <div class="service-item-card" onclick="openProduct('Uid Topup [BD SERVER]', 'uid')">
+                <img src="https://i.ibb.co/gST4S87/uid-topup.png" alt="UID Topup" onerror="this.src='https://via.placeholder.com/150/2c3e50/ffffff?text=UID'">
+                <div class="service-item-footer">Uid Topup [BD SERVER]</div>
+            </div>
+            <div class="service-item-card" onclick="openProduct('WEEKLY LITE', 'lite')">
+                <img src="https://i.ibb.co/QHZz7gY/weekly-lite.png" alt="Weekly Lite" onerror="this.src='https://via.placeholder.com/150/27ae60/ffffff?text=LITE'">
+                <div class="service-item-footer">WEEKLY LITE</div>
+            </div>
+            <div class="service-item-card" onclick="openProduct('WEEKLY MEMBERSHIP', 'weekly_monthly')">
+                <img src="https://i.ibb.co/df9YmS8/weekly.png" alt="Weekly" onerror="this.src='https://via.placeholder.com/150/8e44ad/ffffff?text=WEEKLY'">
+                <div class="service-item-footer">WEEKLY</div>
+            </div>
+            <div class="service-item-card" onclick="openProduct('MONTHLY MEMBERSHIP', 'monthly_only')">
+                <img src="https://i.ibb.co/0Vp9g88/monthly.png" alt="Monthly" onerror="this.src='https://via.placeholder.com/150/f39c12/ffffff?text=MONTHLY'">
+                <div class="service-item-footer">MONTHLY</div>
+            </div>
+            <div class="service-item-card" onclick="openProduct('Weekly/Monthly Combo', 'weekly_monthly')">
+                <img src="https://i.ibb.co/L84mY9n/combo.png" alt="Combo" onerror="this.src='https://via.placeholder.com/150/16a085/ffffff?text=COMBO'">
+                <div class="service-item-footer">Weekly/Monthly</div>
+            </div>
+            <div class="service-item-card" onclick="openProduct('Level Up Pass', 'level_up')">
+                <img src="https://i.ibb.co/tqgq88Y/levelup.png" alt="Level Up" onerror="this.src='https://via.placeholder.com/150/2980b9/ffffff?text=LEVEL+UP'">
+                <div class="service-item-footer">Lavel UP PASS</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="buyPage" class="page">
+        <button class="btn-back" onclick="showPage('homePage')">← Back</button>
+
+        <div class="banner-card">
+            <div class="banner-img" id="pageDynamicBadge">XF</div>
+            <div class="banner-info">
+                <h2 id="pageDynamicTitle">FRIDAY OFFER ⚡</h2>
+                <p>Game / Topup / Auto Delivery</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="step-title">
+                <div class="step-num">1</div>
+                <div>Select Recharge</div>
+            </div>
+            <div class="pack-grid" id="dynamicPackContainer"></div>
+        </div>
+
+        <div class="card">
+            <div class="step-title">
+                <div class="step-num">2</div>
+                <div>Account Info</div>
+            </div>
+            <label class="input-label" id="uidLabel">Player id</label>
+            <div class="input-container">
+                <input type="text" id="playerUidInput" placeholder="এই বক্সে আপনার UID দিন">
+                <button class="btn-paste" onclick="handlePaste()">পেস্ট</button>
+            </div>
+            <button class="btn-check" onclick="verifyPlayerId()">আপনার গেম আইডির নাম চেক করুন</button>
+            <p id="verifyStatus" style="text-align:center; font-size:13px; font-weight:bold; color:var(--primary-color); margin-top:10px;"></p>
+        </div>
+
+        <div class="card">
+            <div class="step-title">
+                <div class="step-num">3</div>
+                <div>Payment Method</div>
+            </div>
+            <div class="gateway-grid">
+                <div class="gateway-card bkash" onclick="selectPayment(this, 'bKash')"><span>🌸 bKash</span></div>
+                <div class="gateway-card nagad" onclick="selectPayment(this, 'Nagad')"><span>🔥 Nagad</span></div>
+                <div class="gateway-card rocket" onclick="selectPayment(this, 'Rocket')"><span>🔮 Rocket</span></div>
+            </div>
+
+            <div class="payment-details-box" id="paymentDetailsBox">
+                <div class="payment-instruction" id="paymentInstructionText"></div>
+                <label class="input-label" style="color: #333;">TrxID / Transaction ID দিন</label>
+                <input type="text" id="transactionIdInput" placeholder="8N3489X7">
+            </div>
+
+            <button class="btn-order-submit" onclick="submitOrder()">BUY NOW</button>
+        </div>
+    </div>
+
+    <div id="tournamentPage" class="page">
+        <button class="btn-back" onclick="showPage('homePage')">← Back</button>
+        <div class="section-header-title">🏆 Active Matches 🏆</div>
+
+        <div class="match-card">
+            <div class="match-header">
+                <span>📅 সময়: আজ রাত ০৯:০০ টা</span>
+                <span>ফ্রি ফায়ার (SOLO)</span>
+            </div>
+            <div class="match-body">
+                <div class="match-title">Free Fire Custom Match 2.0 (Classic Bermuda)</div>
+                <div class="match-details-grid">
+                    <div class="detail-item">টোটাল প্রাইজ<div>৳ ৫০০</div></div>
+                    <div class="detail-item">প্রতি কিল<div>৳ ১০</div></div>
+                    <div class="detail-item">এন্ট্রি ফি<div>৳ ৩০</div></div>
+                </div>
+                <div class="seat-info-container">
+                    <div class="seat-text-flex">
+                        <span style="color:var(--primary-color);">🔥 মাত্র ১২ টি সিট বাকি!</span>
+                        <span>৩৮/৫০ Joined</span>
+                    </div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 76%;"></div></div>
+                </div>
+                <div class="match-footer">
+                    <div class="room-info-box" id="roomInfo1">🔐 রুম কোড ম্যাচ শুরুর ১৫ মিনিট আগে শো করবে</div>
+                    <button class="btn-join-match" onclick="joinTournament(30, 'roomInfo1')">JOIN NOW</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addMoneyPage" class="page">
+        <div class="card">
+            <div class="add-money-title">Add Money / Fund</div>
+            <label class="input-label">Select Payment Method</label>
+            <div class="gateway-grid" style="margin-bottom: 15px;">
+                <div class="gateway-card bkash" onclick="selectPayment(this, 'bKash')"><span>🌸 bKash</span></div>
+                <div class="gateway-card nagad" onclick="selectPayment(this, 'Nagad')"><span>🔥 Nagad</span></div>
+            </div>
+            <label class="input-label">Enter Amount (টাকার পরিমাণ)</label>
+            <input type="number" id="fundAmount" placeholder="৳ সর্বনিম্ন ১০ টাকা">
+            <button class="btn-check" style="background-color: var(--secondary-color); margin-top: 15px;" onclick="handleAddMoney()">Click Here To Add Money</button>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+    <div class="sidebar" id="sidebarMenu">
+        <div class="profile-section">
+            <div class="profile-avatar">Md</div>
+            <h3 class="profile-name">Hi, MD RIAD</h3>
+            <p class="profile-email">riadgamingpc1@gmail.com</p>
+        </div>
+        <nav class="menu-list">
+            <div class="menu-item" onclick="showPage('homePage'); toggleSidebar(false);">🏠 My Account</div>
+            <div class="menu-item" onclick="showPage('tournamentPage'); toggleSidebar(false);">🏆 My Matches</div>
+            <div class="menu-item" onclick="showPage('addMoneyPage'); toggleSidebar(false);">➕ Add Fund</div>
+            <div class="menu-item" onclick="alert('যোগাযোগ: 01851634841')">ℹ️ Contact Us</div>
+        </nav>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="showPage('homePage')"><span class="nav-icon">🏠</span><span>Home</span></div>
+        <div class="nav-item" onclick="showPage('tournamentPage')"><span class="nav-icon">🏆</span><span>Matches</span></div>
+        <div class="nav-item" onclick="showPage('addMoneyPage')"><span class="nav-icon">➕</span><span>Add Fund</span></div>
+        <div class="nav-item" onclick="toggleSidebar(true)"><span class="nav-icon">👤</span><span>Account</span></div>
+    </div>
+
+    <script>
+        // আপনার ইমেজ স্ক্রিনশট অনুযায়ী প্রোডাক্ট প্যাকেজ ডাটা
+        const packageData = {
+            friday: [
+                { name: 'Weekly + Monthly 👑', price: '৳৭৫০', stockOut: false },
+                { name: 'Monthly Membership 🌙 [Offer]', price: '৳৬৯৯', stockOut: false },
+                { name: '2x Monthly Membership 🌙🌙', price: '৳১২৯০', stockOut: false },
+                { name: '5060 Diamond 💎', price: '৳১১২০', stockOut: false },
+                { name: '3060 Diamond 💎', price: '৳৭০০', stockOut: false },
+                { name: '12020 Diamond 💎 [Mega]', price: '৳২৯৯৯', stockOut: false }
+            ],
+            uid: [
+                { name: '115 Diamond 💎', price: '৳৭৯', stockOut: false },
+                { name: '240 Diamond 💎', price: '৳১৫৮', stockOut: true }, 
+                { name: '355 Diamond 💎', price: '৳২৩৭', stockOut: false },
+                { name: '480 Diamond 💎', price: '৳৩১৬', stockOut: false },
+                { name: '505 Diamond 💎', price: '৳৩৩৬', stockOut: false },
+                { name: '610 Diamond 💎', price: '৳৪০০', stockOut: false },
+                { name: '850 Diamond 💎', price: '৳৫৫৮', stockOut: false },
+                { name: '1090 Diamond 💎', price: '৳৭১৬', stockOut: false }
+            ],
+            premium_user: [
+                { name: 'Premium Bundle Pack 🎁', price: '৳৯৫০', stockOut: false },
+                { name: 'Super Safe UID Offer 🔥', price: '৳৩৫০', stockOut: false }
+            ],
+            weekly_120: [
+                { name: '120 TK Special Weekly 🎫', price: '৳১২০', stockOut: false }
+            ],
+            weekly_monthly: [
+                { name: 'Weekly + Monthly 👑', price: '৳৯৪৮', stockOut: false },
+                { name: 'Monthly Membership 🌙', price: '৳৭৭০', stockOut: false },
+                { name: 'Weekly Membership 🎫', price: '৳১৫৮', stockOut: true },
+                { name: '2x Weekly Membership 🎫🎫', price: '৳৩১৬', stockOut: false },
+                { name: '3x Weekly Membership 🎫🎫🎫', price: '৳৪৭৪', stockOut: false },
+                { name: '5x Weekly Membership 🎫🎫🎫🎫🎫', price: '৳৭৯০', stockOut: false }
+            ],
+            monthly_only: [
+                { name: 'Monthly Membership 🌙', price: '৳৭৭০', stockOut: false },
+                { name: '2x Monthly Membership 🌙🌙', price: '৳১৫৪০', stockOut: false }
+            ],
+            lite: [
+                { name: 'Weekly Lite 1X 🛒', price: '৳৪৫', stockOut: false },
+                { name: '5X Weekly Lite 🛒', price: '৳২২৫', stockOut: false },
+                { name: 'Weekly lite 10X 🛒', price: '৳৪৫০', stockOut: false }
+            ],
+            level_up: [
+                { name: 'Level Up Pass - Lvl 30 📈', price: '৳১৮০', stockOut: false }
+            ]
+        };
+
+        const adminNumber = "01851634841";
+        let selectedMethod = ""; 
+        let currentWalletBalance = 0; 
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            if(pageId === 'homePage') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            if(pageId === 'tournamentPage') document.querySelectorAll('.nav-item')[1].classList.add('active');
+            if(pageId === 'addMoneyPage') document.querySelectorAll('.nav-item')[2].classList.add('active');
+        }
+
+        function toggleSidebar(open) {
+            const overlay = document.getElementById('sidebarOverlay');
+            const menu = document.getElementById('sidebarMenu');
+            if(open) { overlay.style.display = 'block'; setTimeout(() => menu.classList.add('open'), 10); } 
+            else { menu.classList.remove('open'); setTimeout(() => overlay.style.display = 'none', 300); }
+        }
+
+        function openProduct(title, key) {
+            showPage('buyPage');
+            document.getElementById('pageDynamicTitle').innerText = title;
+
+            const container = document.getElementById('dynamicPackContainer');
+            container.innerHTML = "";
+            selectedMethod = ""; 
+            document.getElementById('paymentDetailsBox').style.display = "none";
+            document.querySelectorAll('.gateway-card').forEach(c => c.classList.remove('selected'));
+
+            // শুক্রবার চেক লজিক (৫ = শুক্রবার)
+            const today = new Date().getDay(); 
+
+            let data = packageData[key] || packageData['uid'];
+            data.forEach(pack => {
+                const div = document.createElement('div');
+                div.className = "pack-btn";
+                
+                let isStockOut = pack.stockOut;
+                if (key === 'friday') {
+                    if (today === 5) { isStockOut = false; } 
+                    else { isStockOut = true; }
+                }
+
+                if(isStockOut) {
+                    div.innerHTML = `<div class="pack-name" style="color:#aaa;">${pack.name}</div><div class="pack-price" style="color:#aaa;">${pack.price}</div><span class="stock-out-badge">STOCK OUT</span>`;
+                    div.style.background = "#fafafa";
+                    div.style.cursor = "not-allowed";
+                } else {
+                    div.setAttribute('onclick', 'selectPack(this)');
+                    div.innerHTML = `<div class="pack-name">${pack.name}</div><div class="pack-price">${pack.price}</div>`;
+                }
+                container.appendChild(div);
+            });
+        }
+
+        function selectPack(el) {
+            document.querySelectorAll('.pack-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function selectPayment(el, method) {
+            document.querySelectorAll('.gateway-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedMethod = method; 
+
+            const detailBox = document.getElementById('paymentDetailsBox');
+            const insText = document.getElementById('paymentInstructionText');
+            detailBox.style.display = "block";
+
+            insText.innerHTML = `আমাদের <strong>${method}</strong> পার্সোনাল নাম্বার <strong style="color:var(--primary-color); font-size:15px;">${adminNumber}</strong> এ টাকা সেন্ড মানি (Send Money) করে নিচের বক্সে TrxID দিন। <button class="copy-num-btn" onclick="copyNumber()">কপি করুন</button>`;
+        }
+
+        function copyNumber() {
+            navigator.clipboard.writeText(adminNumber);
+            alert("নম্বরটি কপি করা হয়েছে: " + adminNumber);
+        }
+
+        async function handlePaste() {
+            try { document.getElementById('playerUidInput').value = await navigator.clipboard.readText(); } 
+            catch { alert("ম্যানুয়ালি লিখুন।"); }
+        }
+
+        function verifyPlayerId() {
+            const uid = document.getElementById('playerUidInput').value;
+            const status = document.getElementById('verifyStatus');
+            if(!uid) { alert("UID দিন!"); return; }
+            status.innerText = "যাচাই করা হচ্ছে...";
+            setTimeout(() => { status.innerText = "সফল! নাম: X_FIRE_PLAYER"; }, 800);
+        }
+
+        function joinTournament(entryFee, infoBoxId) {
+            const gameUid = prompt("টুর্নামেন্টে জয়েন করার জন্য আপনার Free Fire UID দিন:");
+            if (!gameUid) { alert("UID ছাড়া টুর্নামেন্টে জয়েন করা সম্ভব নয়!"); return; }
+            
+            if (currentWalletBalance >= entryFee) {
+                currentWalletBalance -= entryFee;
+                document.getElementById('userWalletBalance').innerText = `👛 ৳ ${currentWalletBalance}`;
+                alert("সফলভাবে টুর্নামেন্টে জয়েন হয়েছেন!");
+                document.getElementById(infoBoxId).innerHTML = `🆔 Room ID: <strong>88554411</strong><br>🔑 Pass: <strong>7788</strong>`;
+                document.getElementById(infoBoxId).style.background = "#d4efdf";
+                document.getElementById(infoBoxId).style.color = "#1e8449";
+            } else {
+                alert(`আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই। অনুগ্রহ করে Add Fund সেকশন থেকে টাকা এড করুন।`);
+                showPage('addMoneyPage');
+            }
+        }
+
+        function submitOrder() {
+            const uid = document.getElementById('playerUidInput').value;
+            const activePack = document.querySelector('.pack-btn.selected');
+            const trxId = document.getElementById('transactionIdInput').value;
+
+            if(!activePack) { alert("দয়া করে একটি packages সিলেক্ট করুন!"); return; }
+            if(!uid) { alert("দয়া করে আপনার প্লেয়ার UID দিন!"); return; }
+            if(!selectedMethod) { alert("দয়া করে পেমেন্ট মেথড সিলেক্ট করুন!"); return; }
+            if(!trxId.trim()) { alert("দয়া করে TrxID লিখুন!"); return; }
+
+            alert(`আপনার অর্ডারটি সিস্টেমে জমা হয়েছে!\n৫-১০ মিনিটের মধ্যে অর্ডার কমপ্লিট হবে। ধন্যবাদ!`);
+        }
+
+        function handleAddMoney() {
+            const amount = parseInt(document.getElementById('fundAmount').value);
+            if(!selectedMethod) { alert("অনুগ্রহ করে বিকাশ বা নগদ সিলেক্ট করুন!"); return; }
+            if(!amount || amount < 10) { alert("সর্বনিম্ন ১০ টাকা টাইপ করুন!"); return; }
+            
+            currentWalletBalance += amount;
+            document.getElementById('userWalletBalance').innerText = `👛 ৳ ${currentWalletBalance}`;
+            alert(`আমাদের এই ${adminNumber} নাম্বারে ৳${amount} টাকা সেন্ড মানি করার রিকোয়েস্টটি সফল হয়েছে। টেস্ট ব্যালেন্স যুক্ত হয়েছে!`);
+            showPage('homePage');
+        }
+    </script>
+</body>
+</html>
