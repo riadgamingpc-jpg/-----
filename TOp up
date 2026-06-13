@@ -1,0 +1,173 @@
+rx-topup-full-system/
+│
+├── backend/
+│   ├── server.js
+│   ├── config/
+│   │    └── db.js
+│   ├── models/
+│   │    ├── User.js
+│   │    └── Order.js
+│   ├── routes/
+│   │    ├── auth.js
+│   │    └── order.js
+│
+├── frontend-web/
+│   ├── index.html
+│   ├── login.html
+│   ├── admin.html
+│   └── app.js
+│
+├── flutter-app/
+│   ├── lib/
+│   │   ├── main.dart
+│   │   ├── screens/
+│   │   └── services/
+│
+├── package.json
+└── README.const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+mongoose.connect("mongodb://127.0.0.1:27017/rxtopup");
+
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/orders", require("./routes/order"));
+
+app.listen(5000, () => console.log("RX TOP UP Server Running"const mongoose = require("mongoose");
+
+const UserSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  role: { type: String, default: "user" }
+});
+
+module.exports = mongoose.model("User", UserSchema);));const mongoose = require("mongoose");
+
+const OrderSchema = new mongoose.Schema({
+  userId: String,
+  package: String,
+  uid: String,
+  paymentNumber: String,
+  status: { type: String, default: "pending" },
+  date: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model("Order", OrderSchema);const router = require("express").Router();
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+router.post("/register", async (req,res)=>{
+  const hash = await bcrypt.hash(req.body.password,10);
+
+  const user = new User({
+    username:req.body.username,
+    password:hash
+  });
+
+  await user.save();
+  res.send("User Created");
+});
+
+router.post("/login", async (req,res)=>{
+  const user = await User.findOne({username:req.body.username});
+  if(!user) return res.send("User Not Found");
+
+  const ok = await bcrypt.compare(req.body.password,user.password);
+  if(!ok) return res.send("Wrong Password");
+
+  const token = jwt.sign({id:user._id},"SECRET");
+  res.json({token});
+});
+
+module.exports = router;const router = require("express").Router();
+const Order = require("../models/Order");
+const jwt = require("jsonwebtoken");
+
+router.post("/create", async (req,res)=>{
+  const token = req.headers.token;
+  const user = jwt.verify(token,"SECRET");
+
+  const order = new Order({
+    userId: user.id,
+    package: req.body.package,
+    uid: req.body.uid,
+    paymentNumber: req.body.paymentNumber
+  });
+
+  await order.save();
+  res.send("Order Placed");
+});
+
+router.get("/", async (req,res)=>{
+  const orders = await Order.find();
+  res.json(orders);
+});
+
+module.exports = router;<h2>RX TOP UP</h2>
+
+<input id="uid" placeholder="Game UID">
+<input id="pack" readonly placeholder="Select Package">
+
+<button onclick="selectPack('50 Diamond - 39 TK')">50 💎</button>
+<button onclick="selectPack('115 Diamond - 75 TK')">115 💎</button>
+
+<button onclick="placeOrder()">Order Now</button>
+
+<script src="app.js"></script>function selectPack(p){
+  document.getElementById("pack").value = p;
+}
+
+async function placeOrder(){
+  const res = await fetch("http://localhost:5000/api/orders/create",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "token": localStorage.getItem("token")
+    },
+    body:JSON.stringify({
+      package: document.getElementById("pack").value,
+      uid: document.getElementById("uid").value,
+      paymentNumber: "bKash/Nagad"
+    })
+  });
+
+  alert(await res.text());
+}import 'package:flutter/material.dart';
+import 'screens/login.dart';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: LoginPage(),
+  ));
+}# RX TOP UP FULL SYSTEM
+
+## Features
+- Node.js Backend
+- MongoDB Database
+- JWT Login System
+- Auto Order System
+- Admin Panel API
+- Flutter Mobile App
+- Web Frontend
+
+## Run Backend
+npm install
+node backend/server.js
+
+## Flutter Run
+flutter pub get
+flutter run
+
+## API
+http://localhost:5000/git init
+git add .
+git commit -m "RX TOP UP FULL SYSTEM"
+git branch -M main
+git remote add origin https://github.com/your-username/rx-topup.git
+git push -u origin main
